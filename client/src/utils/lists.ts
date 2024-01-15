@@ -8,9 +8,10 @@ export const insertOneItemInList = <T extends { id: number }>(
   item: T,
   list: T[]
 ): T[] => {
+  console.log(item);
   if (!item || item.id === undefined) return [...list];
-  // optimize, if none of items is bigger then new one
-  if (list[list.length - 1].id < item.id) {
+  // optimize, if none of items is bigger then new onen
+  if (list[list.length - 1]?.id < item.id) {
     return [...list, item];
   }
   for (let i = 0; i < list.length; i++) {
@@ -36,9 +37,9 @@ export const insertManyItemsInList = <T extends { id: number }>(
   list: T[]
 ): T[] => {
   if (!items) return [...list];
-  let newArray = list;
+  let newArray = [...list];
   for (const item of items) {
     newArray = insertOneItemInList(item, newArray);
   }
-  return [...list];
+  return [...newArray];
 };

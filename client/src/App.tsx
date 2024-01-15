@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FormEventHandler, useRef } from "react";
+import "./App.css";
+import { useSocket } from "./hooks/useSocket";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const name = useRef<HTMLInputElement>(null);
+  const { listItems: list, send } = useSocket();
+
+  const sendForm: FormEventHandler = (e) => {
+    e.preventDefault();
+    if (!name.current) return;
+    send(name.current.value);
+  };
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <form onSubmit={sendForm}>
+          <input type="text" id="name" ref={name} />
+          <button type="submit">send</button>
+        </form>
+        <ul>
+          {list.map((el) => (
+            <li key={el.id}>{el.name}</li>
+          ))}
+        </ul>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

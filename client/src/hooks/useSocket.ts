@@ -21,10 +21,19 @@ export const useSocket = () => {
 
   socket.on("data", (data: IListItem[]) => {
     console.log(data);
-
     const newList = insertManyItemsInList(data, listItems);
+    console.log(newList);
     setListItems(newList);
   });
 
-  return listItems;
+  socket.on("error", (data: string) => {
+    console.log(data);
+  });
+
+  const send = (name: string) => {
+    if (!socket) console.error("no connection", socket);
+    socket.emit("event", name);
+  };
+
+  return { listItems, send };
 };
